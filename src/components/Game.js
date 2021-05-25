@@ -5,18 +5,18 @@ const createGrid = (size, fill = false) =>
   new Array(size).fill(new Array(size).fill(fill))
 
 function Game({ size, speed }) {
-  const collectSurroundingIdxs = (y, x) => {
-    const cells = []
-    cells.push([y, x + 1])
-    cells.push([y, x - 1])
-    cells.push([y - 1, x])
-    cells.push([y - 1, x - 1])
-    cells.push([y - 1, x + 1])
-    cells.push([y + 1, x])
-    cells.push([y + 1, x - 1])
-    cells.push([y + 1, x + 1])
-    return cells.filter(([y, x]) => x >= 0 && y >= 0 && x < size && y < size)
-  }
+  const collectSurroundingIdxs = (y, x) =>
+    [
+      [y, x + 1],
+      [y, x - 1],
+      [y - 1, x],
+      [y - 1, x - 1],
+      [y - 1, x + 1],
+      [y + 1, x],
+      [y + 1, x - 1],
+      [y + 1, x + 1],
+    ].filter(([y, x]) => x >= 0 && y >= 0 && x < size && y < size)
+
   const reduceNextState = (states, toggleCellOnClickByIdx) => {
     if (toggleCellOnClickByIdx != null) {
       const [changeY, changeX] = toggleCellOnClickByIdx
@@ -30,7 +30,6 @@ function Game({ size, speed }) {
         }),
       )
     } else {
-      console.log("gameTick")
       return states.map((col, y) =>
         col.map((currentCell, x) => {
           const surrounding = collectSurroundingIdxs(y, x).map(
@@ -64,10 +63,11 @@ function Game({ size, speed }) {
     if (playing) {
       const id = setInterval(tick, speed)
       intervalRef.current = id
-    } else {
+    }
+    return () => {
       clearInterval(intervalRef.current)
     }
-  }, [playing])
+  }, [playing, speed])
 
   return (
     <div>
