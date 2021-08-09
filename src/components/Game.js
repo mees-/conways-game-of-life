@@ -1,8 +1,7 @@
 import { useEffect, useReducer, useRef, useState } from "react"
 import Grid from "./Grid"
 
-const createGrid = (size, fill = false) =>
-  new Array(size).fill(new Array(size).fill(fill))
+const createGrid = (size, fill = false) => new Array(size).fill(new Array(size).fill(fill))
 
 function Game({ size, speed }) {
   const collectSurroundingIdxs = (y, x) =>
@@ -32,9 +31,7 @@ function Game({ size, speed }) {
     } else {
       return states.map((col, y) =>
         col.map((currentCell, x) => {
-          const surrounding = collectSurroundingIdxs(y, x).map(
-            ([y, x]) => states[y][x],
-          )
+          const surrounding = collectSurroundingIdxs(y, x).map(([y, x]) => states[y][x])
           const liveNeighbours = surrounding.filter(cell => cell).length
           if (currentCell === false && liveNeighbours === 3) {
             return true // Dead cell with at least three live neighbours comes alive
@@ -70,7 +67,12 @@ function Game({ size, speed }) {
   }, [playing, speed])
 
   return (
-    <div>
+    <div
+      style={{
+        height: "100%",
+        width: "100%",
+      }}
+    >
       <button onClick={() => setPlaying(!playing)}>toggle playing</button>
       <Grid states={states} onCellClick={handleCellClick}></Grid>
     </div>
