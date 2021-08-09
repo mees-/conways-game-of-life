@@ -13,23 +13,9 @@ const Grid = ({ states, onCellClick }) => (
       .map((row, y) => row.map((el, x) => [el, [y, x]]))
       .flat()
       .map(([state, idx]) => (
-        <GridCell
-          key={idx}
-          state={state}
-          onClickHandler={() => onCellClick(idx)}
-        />
+        <GridCell key={idx} state={state} onClickHandler={() => onCellClick(idx)} />
       ))}
   </div>
 )
 
 export default Grid
-
-const isInteger = x => x === Math.floor(x)
-const isSquare = arr => {
-  for (const col of arr) {
-    if (col.length !== arr.length) {
-      return false
-    }
-  }
-  return true
-}
