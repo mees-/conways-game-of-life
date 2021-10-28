@@ -31,7 +31,7 @@ function Game({ size, speed }) {
     } else {
       return states.map((col, y) =>
         col.map((currentCell, x) => {
-          const surrounding = collectSurroundingIdxs(y, x).map(([y, x]) => states[y][x])
+          const surrounding = collectSurroundingIdxs(y, x).map(([sy, sx]) => states[sy][sx])
           const liveNeighbours = surrounding.filter(cell => cell).length
           if (currentCell === false && liveNeighbours === 3) {
             return true // Dead cell with at least three live neighbours comes alive
@@ -44,36 +44,28 @@ function Game({ size, speed }) {
       )
     }
   }
-  const [playing, setPlaying] = useState(false)
 
   const [states, tick] = useReducer(reduceNextState, createGrid(size))
 
   const handleCellClick = idx => {
-    if (!playing) {
+    if (speed === 0) {
       tick(idx)
     }
   }
 
-  const intervalRef = useRef()
-
   useEffect(() => {
-    if (playing) {
-      const id = setInterval(tick, speed)
-      intervalRef.current = id
+    if (speed > 0) {
+      const id = setInterval(tick, 1000 / speed)
+      return () => {
+        clearInterval(id)
+      }
+    } else {
+      return () => {}
     }
-    return () => {
-      clearInterval(intervalRef.current)
-    }
-  }, [playing, speed])
+  }, [speed])
 
   return (
-    <div
-      style={{
-        height: "100%",
-        width: "100%",
-      }}
-    >
-      <button onClick={() => setPlaying(!playing)}>toggle playing</button>
+    <div>
       <Grid states={states} onCellClick={handleCellClick}></Grid>
     </div>
   )
